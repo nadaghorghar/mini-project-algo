@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aec71b8f-0b9c-4c14-85c2-ebd0185bf47c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/data/racines.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/schemes.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/ValidationResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/MorphologyEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/MorphologyEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/FileLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/FileLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Root.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Root.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/MainGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/mini-project-algo/structures/AVLTree.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/mini-project-algo/structures/AVLTree.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/structures/AVLTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/structures/AVLTree.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,16 +34,31 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.JavaFXApp .executor&quot;: &quot;Run&quot;,
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ADMIN/IdeaProjects/mini-project-algo&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ADMIN/IdeaProjects/mini-project-algo&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="JavaFXApp " type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="app.MainGUI" />
+      <module name="mini-project-algo" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\ADMIN\Downloads\openjfx-25.0.2_windows-x64_bin-sdk\javafx-sdk-25.0.2\lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.graphics" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

@@ -473,4 +473,18 @@ public class AVLTree {
         if (node == null) return 0;
         return 1 + countNodes(node.left) + countNodes(node.right);
     }
+    public String getInOrderString() {
+        StringBuilder sb = new StringBuilder();
+        getInOrderStringHelper(root, sb);
+        sb.append("\nTotal: ").append(size()).append(" racines");
+        return sb.toString();
+    }
+
+    private void getInOrderStringHelper(Node node, StringBuilder sb) {
+        if (node != null) {
+            getInOrderStringHelper(node.left, sb);
+            sb.append(node.getRoot().toString()).append("\n");
+            getInOrderStringHelper(node.right, sb);
+        }
+    }
 }
