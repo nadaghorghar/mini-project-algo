@@ -21,6 +21,7 @@ import structures.AVLTree;
 import structures.HashTableSchemes;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MainGUI extends Application {
 
@@ -106,10 +107,12 @@ public class MainGUI extends Application {
         Button btn4 = createMenuButton("📝 عرض المشتقات\nAfficher dérivés", () -> showDerivativesDialog());
         Button btn5 = createMenuButton("➕ إضافة جذر\nAjouter racine", () -> showAddRootDialog());
         Button btn6 = createMenuButton("➕ إضافة وزن\nAjouter schème", () -> showAddSchemeDialog());
-        Button btn7 = createMenuButton("📖 عرض الجذور\nAfficher racines", () -> showAllRoots());
-        Button btn8 = createMenuButton("📐 عرض الأوزان\nAfficher schèmes", () -> showAllSchemes());
+        Button btn7 = createMenuButton("✏️ تعديل وزن\nModifier schème", () -> showModifySchemeDialog());
+        Button btn8 = createMenuButton("🗑️ حذف وزن\nSupprimer schème", () -> showDeleteSchemeDialog());
+        Button btn9 = createMenuButton("📖 عرض الجذور\nAfficher racines", () -> showAllRoots());
+        Button btn10 = createMenuButton("📐 عرض الأوزان\nAfficher schèmes", () -> showAllSchemes());
 
-        menu.getChildren().addAll(menuTitle, sep, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8);
+        menu.getChildren().addAll(menuTitle, sep, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10);
         return menu;
     }
 
@@ -393,10 +396,130 @@ public class MainGUI extends Application {
                 String name = nameField.getText().trim();
                 String pattern = patternField.getText().trim();
 
+                if (name.isEmpty() || pattern.isEmpty()) {
+                    showError("الرجاء ملء جميع الحقول\nVeuillez remplir tous les champs");
+                    return;
+                }
+
                 schemes.insert(new Scheme(name, pattern));
                 outputArea.setText("✅ تمت الإضافة بنجاح - Ajouté avec succès\n\n" +
                         "الوزن - Schème: " + name + "\n" +
                         "النمط - Pattern: " + pattern);
+            }
+        });
+    }
+
+    /**
+     * Dialogue pour modifier un schème existant
+     */
+    private void showModifySchemeDialog() {
+        // Étape 1: Demander le nom du schème à modifier
+        TextInputDialog searchDialog = new TextInputDialog();
+        searchDialog.setTitle("تعديل وزن - Modifier schème");
+        searchDialog.setHeaderText("أدخل اسم الوزن المراد تعديله\nEntrez le nom du schème à modifier");
+        searchDialog.setContentText("الاسم - Nom:");
+
+        Optional<String> result = searchDialog.showAndWait();
+
+        result.ifPresent(schemeName -> {
+            Scheme scheme = schemes.search(schemeName);
+
+            if (scheme == null) {
+                showError("الوزن غير موجود\nSchème non trouvé: " + schemeName);
+                return;
+            }
+
+            // Étape 2: Afficher le pattern actuel et demander le nouveau
+            Dialog<ButtonType> modifyDialog = new Dialog<>();
+            modifyDialog.setTitle("تعديل وزن - Modifier schème");
+            modifyDialog.setHeaderText("تعديل النمط\nModifier le pattern");
+
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20));
+
+            Label currentLabel = new Label("النمط الحالي - Pattern actuel:");
+            Label currentValue = new Label(scheme.getPattern());
+            currentValue.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            currentValue.setStyle("-fx-text-fill: #667eea;");
+
+            TextField newPatternField = new TextField(scheme.getPattern());
+            newPatternField.setPromptText("النمط الجديد (ex: ف1ا ف2 ف3)");
+            newPatternField.setFont(Font.font("Arial", 16));
+
+            grid.add(new Label("الاسم - Nom:"), 0, 0);
+            grid.add(new Label(schemeName), 1, 0);
+            grid.add(currentLabel, 0, 1);
+            grid.add(currentValue, 1, 1);
+            grid.add(new Label("النمط الجديد - Nouveau pattern:"), 0, 2);
+            grid.add(newPatternField, 1, 2);
+
+            modifyDialog.getDialogPane().setContent(grid);
+            modifyDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+            modifyDialog.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    String newPattern = newPatternField.getText().trim();
+
+                    if (newPattern.isEmpty()) {
+                        showError("النمط لا يمكن أن يكون فارغاً\nLe pattern ne peut pas être vide");
+                        return;
+                    }
+
+                    String oldPattern = scheme.getPattern();
+                    boolean success = schemes.modify(schemeName, newPattern);
+
+                    if (success) {
+                        outputArea.setText("✅ تم التعديل بنجاح - Modifié avec succès\n\n" +
+                                "الوزن - Schème: " + schemeName + "\n" +
+                                "النمط القديم - Ancien pattern: " + oldPattern + "\n" +
+                                "النمط الجديد - Nouveau pattern: " + newPattern);
+                    } else {
+                        showError("فشل التعديل\nÉchec de la modification");
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Dialogue pour supprimer un schème
+     */
+    private void showDeleteSchemeDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("حذف وزن - Supprimer schème");
+        dialog.setHeaderText("أدخل اسم الوزن المراد حذفه\nEntrez le nom du schème à supprimer");
+        dialog.setContentText("الاسم - Nom:");
+
+        dialog.showAndWait().ifPresent(schemeName -> {
+            Scheme scheme = schemes.search(schemeName);
+
+            if (scheme == null) {
+                showError("الوزن غير موجود\nSchème non trouvé: " + schemeName);
+                return;
+            }
+
+            // Confirmation avant suppression
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("تأكيد الحذف - Confirmer la suppression");
+            confirmAlert.setHeaderText("هل أنت متأكد من حذف هذا الوزن؟\nÊtes-vous sûr de vouloir supprimer ce schème ?");
+            confirmAlert.setContentText("الوزن - Schème: " + schemeName + "\n" +
+                    "النمط - Pattern: " + scheme.getPattern());
+
+            Optional<ButtonType> confirmResult = confirmAlert.showAndWait();
+
+            if (confirmResult.isPresent() && confirmResult.get() == ButtonType.OK) {
+                boolean success = schemes.delete(schemeName);
+
+                if (success) {
+                    outputArea.setText("✅ تم الحذف بنجاح - Supprimé avec succès\n\n" +
+                            "الوزن المحذوف - Schème supprimé: " + schemeName + "\n" +
+                            "النمط - Pattern: " + scheme.getPattern() + "\n\n" +
+                            "عدد الأوزان المتبقية - Schèmes restants: " + schemes.size());
+                } else {
+                    showError("فشل الحذف\nÉchec de la suppression");
+                }
             }
         });
     }
@@ -417,8 +540,14 @@ public class MainGUI extends Application {
         sb.append("═══════════════════════════════════════\n\n");
 
         List<Scheme> allSchemes = schemes.getAllSchemes();
-        for (Scheme scheme : allSchemes) {
-            sb.append("• ").append(scheme.toString()).append("\n");
+
+        if (allSchemes.isEmpty()) {
+            sb.append("(لا توجد أوزان)\n(Aucun schème)");
+        } else {
+            for (Scheme scheme : allSchemes) {
+                sb.append("• ").append(scheme.toString()).append("\n");
+            }
+            sb.append("\nالعدد الكلي - Total: ").append(schemes.size()).append(" schèmes");
         }
 
         outputArea.setText(sb.toString());

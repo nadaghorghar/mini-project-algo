@@ -18,6 +18,14 @@ public class Scheme {
         return pattern;
     }
 
+    /**
+     * Permet de modifier le pattern d'un schème
+     * @param pattern Le nouveau pattern
+     */
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
+
     @Override
     public String toString() {
         return "Scheme[" + name + " => " + pattern + "]";
