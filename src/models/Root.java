@@ -230,4 +230,44 @@ public class Root {
     public int hashCode() {
         return letters.hashCode();
     }
+    public String getValue() {
+        return letters;
+    }
+    public void detectType() {
+        if (letters == null || letters.length() != 3) {
+            this.type = REGULIERE;
+            return;
+        }
+
+        char l1 = letters.charAt(0);
+        char l2 = letters.charAt(1);
+        char l3 = letters.charAt(2);
+
+        // Lettres faibles
+        boolean hasWaw = (l1 == 'و' || l2 == 'و' || l3 == 'و');
+        boolean hasYa = (l1 == 'ي' || l2 == 'ي' || l3 == 'ي');
+        boolean hasAlif = (l1 == 'ا' || l2 == 'ا' || l3 == 'ا');
+
+        // Hamza
+        boolean hasHamza = (l1 == 'ء' || l2 == 'ء' || l3 == 'ء' ||
+                l1 == 'أ' || l2 == 'أ' || l3 == 'أ' ||
+                l1 == 'إ' || l2 == 'إ' || l3 == 'إ' ||
+                l1 == 'ؤ' || l2 == 'ؤ' || l3 == 'ؤ' ||
+                l1 == 'ئ' || l2 == 'ئ' || l3 == 'ئ');
+
+        // Classification
+        if (hasHamza) {
+            this.type = HAMZA;
+        } else if (l1 == 'و') {
+            this.type = ASSIMILEE;  // Première lettre واو (ex: وعد، وقف)
+        } else if (l2 == 'و' || l2 == 'ي' || l2 == 'ا') {
+            this.type = CREUSE;     // Lettre médiane faible (ex: قال، باع)
+        } else if (l3 == 'و' || l3 == 'ي' || l3 == 'ى') {
+            this.type = DEFECTIVE;  // Dernière lettre faible (ex: رمى، دعا)
+        } else if (hasWaw || hasYa || hasAlif) {
+            this.type = FAIBLE;     // Autre racine faible
+        } else {
+            this.type = REGULIERE;  // Racine régulière (ex: كتب، درس)
+        }
+    }
 }
