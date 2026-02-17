@@ -5,63 +5,66 @@ import models.Scheme;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Table de hachage pour stocker les schèmes morphologiques arabes.
- * Utilise le sondage linéaire pour gérer les collisions.
- *
- * Complexité des opérations:
- * - Insertion: O(1) en moyenne, O(n) dans le pire cas
- * - Recherche: O(1) en moyenne, O(n) dans le pire cas
- * - Suppression: O(1) en moyenne, O(n) dans le pire cas
- *
- * @author Étudiant
- * @version 2.0
- */
 public class HashTableSchemes {
 
     private Scheme[] table;
-    private boolean[] deleted; // Marque les cases supprimées
+    private boolean[] deleted;
     private int size;
+    private int capacity;
+    private static final double LOAD_FACTOR_THRESHOLD = 0.75;
 
     public HashTableSchemes(int capacity) {
+        this.capacity = capacity;
         table = new Scheme[capacity];
         deleted = new boolean[capacity];
         size = 0;
     }
 
-    /**
-     * Fonction de hachage simple
-     * @param key La clé à hacher
-     * @return L'index dans la table
-     */
     private int hash(String key) {
-        return Math.abs(key.hashCode()) % table.length;
+        return Math.abs(key.hashCode()) % capacity;
     }
 
-    /**
-     * Insère un nouveau schème dans la table
-     * @param scheme Le schème à insérer
-     * @return true si l'insertion a réussi, false sinon
-     */
+    private void resize() {
+        int newCapacity = capacity * 2;
+        Scheme[] oldTable = table;
+        boolean[] oldDeleted = deleted;
+
+        table = new Scheme[newCapacity];
+        deleted = new boolean[newCapacity];
+        capacity = newCapacity;
+        size = 0;
+
+        // Rehacher tous les anciens elements
+        for (int i = 0; i < oldTable.length; i++) {
+            if (oldTable[i] != null && !oldDeleted[i]) {
+                insert(oldTable[i]);
+            }
+        }
+    }
+
     public void insert(Scheme scheme) {
         if (scheme == null) return;
 
-        // Vérifier si le schème existe déjà
+        // Verifier si le scheme existe deja
         if (search(scheme.getName()) != null) {
-            System.out.println("Schème déjà existant: " + scheme.getName());
+            System.out.println("Scheme deja existant: " + scheme.getName());
             return;
+        }
+
+        // Verifier si besoin de redimensionner
+        if ((double) size / capacity >= LOAD_FACTOR_THRESHOLD) {
+            resize();
         }
 
         int index = hash(scheme.getName());
         int originalIndex = index;
 
-        // Chercher une case libre (null ou supprimée)
         while (table[index] != null && !deleted[index]) {
-            index = (index + 1) % table.length;
-
-            // Table pleine
+            index = (index + 1) % capacity;
             if (index == originalIndex) {
-                System.out.println("Table de hachage pleine!");
+                // Table pleine, on redimensionne et on reessaye
+                resize();
+                insert(scheme);
                 return;
             }
         }
@@ -71,11 +74,6 @@ public class HashTableSchemes {
         size++;
     }
 
-    /**
-     * Recherche un schème par son nom
-     * @param name Le nom du schème
-     * @return Le schème trouvé, ou null
-     */
     public Scheme search(String name) {
         if (name == null) return null;
 
@@ -86,9 +84,8 @@ public class HashTableSchemes {
             if (table[index] != null && !deleted[index] && table[index].getName().equals(name)) {
                 return table[index];
             }
-            index = (index + 1) % table.length;
+            index = (index + 1) % capacity;
 
-            // Retour au point de départ
             if (index == originalIndex) {
                 break;
             }
@@ -97,12 +94,6 @@ public class HashTableSchemes {
         return null;
     }
 
-    /**
-     * Modifie le pattern d'un schème existant
-     * @param name Le nom du schème à modifier
-     * @param newPattern Le nouveau pattern
-     * @return true si la modification a réussi, false sinon
-     */
     public boolean modify(String name, String newPattern) {
         if (name == null || newPattern == null) return false;
 
@@ -114,12 +105,6 @@ public class HashTableSchemes {
         return false;
     }
 
-    /**
-     * Supprime un schème de la table
-     * Utilise le marquage par suppression (lazy deletion)
-     * @param name Le nom du schème à supprimer
-     * @return true si la suppression a réussi, false sinon
-     */
     public boolean delete(String name) {
         if (name == null) return false;
 
@@ -128,15 +113,13 @@ public class HashTableSchemes {
 
         while (table[index] != null || deleted[index]) {
             if (table[index] != null && !deleted[index] && table[index].getName().equals(name)) {
-                // Marquer comme supprimé
                 deleted[index] = true;
                 table[index] = null;
                 size--;
                 return true;
             }
-            index = (index + 1) % table.length;
+            index = (index + 1) % capacity;
 
-            // Retour au point de départ
             if (index == originalIndex) {
                 break;
             }
@@ -145,26 +128,19 @@ public class HashTableSchemes {
         return false;
     }
 
-    /**
-     * Affiche tous les schèmes stockés
-     */
     public void displayAll() {
-        System.out.println("=== Schèmes stockés ===");
-        for (int i = 0; i < table.length; i++) {
+        System.out.println("=== Schemes stockes ===");
+        for (int i = 0; i < capacity; i++) {
             if (table[i] != null && !deleted[i]) {
                 System.out.println(table[i]);
             }
         }
-        System.out.println("Total: " + size + " schèmes");
+        System.out.println("Total: " + size + " schemes");
     }
 
-    /**
-     * Récupère tous les schèmes sous forme de liste
-     * @return Liste de tous les schèmes
-     */
     public List<Scheme> getAllSchemes() {
         List<Scheme> result = new ArrayList<>();
-        for (int i = 0; i < table.length; i++) {
+        for (int i = 0; i < capacity; i++) {
             if (table[i] != null && !deleted[i]) {
                 result.add(table[i]);
             }
@@ -172,35 +148,19 @@ public class HashTableSchemes {
         return result;
     }
 
-    /**
-     * Retourne le nombre de schèmes stockés
-     * @return Le nombre de schèmes
-     */
     public int size() {
         return size;
     }
 
-    /**
-     * Vérifie si la table est vide
-     * @return true si vide, false sinon
-     */
     public boolean isEmpty() {
         return size == 0;
     }
 
-    /**
-     * Retourne la capacité totale de la table
-     * @return La capacité
-     */
     public int getCapacity() {
-        return table.length;
+        return capacity;
     }
 
-    /**
-     * Calcule le facteur de charge de la table
-     * @return Le facteur de charge (entre 0 et 1)
-     */
     public double loadFactor() {
-        return (double) size / table.length;
+        return (double) size / capacity;
     }
 }

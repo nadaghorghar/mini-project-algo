@@ -2,14 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aec71b8f-0b9c-4c14-85c2-ebd0185bf47c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/schemes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/schemes.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/mini-project-algo/app/MainGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/mini-project-algo/app/MainGUI.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/mini-project-algo/engine/MorphologyEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/mini-project-algo/engine/MorphologyEngine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/mini-project-algo/models/Scheme.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/mini-project-algo/models/Scheme.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/mini-project-algo/structures/HashTableSchemes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/mini-project-algo/structures/HashTableSchemes.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/MainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/MainGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/MorphologyEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/MorphologyEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/Root.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Root.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/Scheme.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Scheme.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/structures/HashTableSchemes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/structures/HashTableSchemes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

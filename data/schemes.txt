@@ -1,6 +1,182 @@
+# ═══════════════════════════════════════════════════════════
+# FICHIER DES SCHÈMES MORPHOLOGIQUES ARABES
+# ═══════════════════════════════════════════════════════════
+# Format: nom_du_schème|pattern
+#
+# NOTATION UTILISÉE:
+# - C1 = 1ère lettre de la racine (الحرف الأول)
+# - C2 = 2ème lettre de la racine (الحرف الثاني)
+# - C3 = 3ème lettre de la racine (الحرف الثالث)
+#
+# Le symbole + est optionnel (pour la lisibilité)
+# Les espaces sont automatiquement supprimés
+#
+# ═══════════════════════════════════════════════════════════
 
-فاعل|ف1ا ف2 ف3
-مفعول|مف1ف2و ف3
-افتعل|اف1ت2 ف3
-تفعيل|تف1 2 ي ف3
-مفاعل|مف1ا ف2 ف3
+# ========== SCHÈMES DE BASE (الأوزان الأساسية) ==========
+
+# فاعل - Nom d'agent (celui qui fait l'action)
+# Exemple: كاتب (écrivain) depuis كتب
+فاعل|C1+ا+C2+C3
+
+# مفعول - Nom de patient (ce qui subit l'action)
+# Exemple: مكتوب (écrit) depuis كتب
+مفعول|م+C1+C2+و+C3
+
+# مَفْعَل - Nom de lieu/temps/instrument
+# Exemple: مكتب (bureau) depuis كتب
+مَفْعَل|م+C1+C2+C3
+
+# مِفْعَال - Nom d'instrument
+# Exemple: مفتاح (clé) depuis فتح
+مِفْعَال|م+C1+C2+ا+C3
+
+# مِفْعَلَة - Nom d'instrument (féminin)
+# Exemple: مكنسة (balai) depuis كنس
+مِفْعَلَة|م+C1+C2+ة
+
+# ========== FORMES INTENSIVES (صيغ المبالغة) ==========
+
+# فَعَّال - Métier/profession (consonne doublée)
+# Exemple: خبّاز (boulanger) depuis خبز
+فَعَّال|C1+C2+C2+ا+C3
+
+# فَعُول - Adjectif intensif
+# Exemple: صبور (patient) depuis صبر
+فَعُول|C1+C2+و+C3
+
+# فَعِيل - Adjectif de qualité
+# Exemple: كبير (grand) depuis كبر
+فَعِيل|C1+C2+ي+C3
+
+# مِفْعَال - Forme intensive d'instrument
+# Exemple: مقراض (ciseaux) depuis قرض
+مِفْعَال|م+C1+C2+ا+C3
+
+# ========== FORME II (الباب الثاني - التفعيل) ==========
+
+# فَعَّلَ - Verbe intensif (consonne doublée)
+# Exemple: كسّر (casser en morceaux) depuis كسر
+فَعَّلَ|C1+C2+C2+C3
+
+# مُفَعِّل - Participe actif Forme II
+# Exemple: مدرّس (professeur) depuis درس
+مُفَعِّل|م+C1+C2+C2+C3
+
+# تَفْعِيل - Nom d'action Forme II
+# Exemple: تدريس (enseignement) depuis درس
+تَفْعِيل|ت+C1+C2+ي+C3
+
+# ========== FORME III (الباب الثالث - المفاعلة) ==========
+
+# فَاعَلَ - Verbe de réciprocité
+# Exemple: كاتب (correspondre) depuis كتب
+فَاعَلَ|C1+ا+C2+C3
+
+# مُفَاعِل - Participe actif Forme III
+# Exemple: مكاتب (correspondant) depuis كتب
+مُفَاعِل|م+C1+ا+C2+C3
+
+# مُفَاعَلَة - Nom d'action Forme III
+# Exemple: مكاتبة (correspondance) depuis كتب
+مُفَاعَلَة|م+C1+ا+C2+ة
+
+# ========== FORME IV (الباب الرابع - الإفعال) ==========
+
+# أَفْعَلَ - Verbe causatif
+# Exemple: أكرم (honorer) depuis كرم
+أَفْعَلَ|أ+C1+C2+C3
+
+# مُفْعَل - Participe actif Forme IV
+# Exemple: مكرم (honorant) depuis كرم
+مُفْعَل|م+C1+C2+C3
+
+# إِفْعَال - Nom d'action Forme IV
+# Exemple: إكرام (fait d'honorer) depuis كرم
+إِفْعَال|إ+C1+C2+ا+C3
+
+# ========== FORME V (الباب الخامس - التفعّل) ==========
+
+# تَفَعَّلَ - Verbe réflexif
+# Exemple: تكلّم (parler) depuis كلم
+تَفَعَّلَ|ت+C1+C2+C2+C3
+
+# مُتَفَعِّل - Participe actif Forme V
+# Exemple: متكلّم (parlant) depuis كلم
+مُتَفَعِّل|م+ت+C1+C2+C2+C3
+
+# ========== FORME VI (الباب السادس - التفاعل) ==========
+
+# تَفَاعَلَ - Verbe réciproque
+# Exemple: تكاتب (se correspondre) depuis كتب
+تَفَاعَلَ|ت+C1+ا+C2+C3
+
+# مُتَفَاعِل - Participe actif Forme VI
+# Exemple: متكاتب (correspondant mutuellement) depuis كتب
+مُتَفَاعِل|م+ت+C1+ا+C2+C3
+
+# ========== FORME VII (الباب السابع - الانفعال) ==========
+
+# اِنْفَعَلَ - Verbe passif/réflexif
+# Exemple: انكسر (se casser) depuis كسر
+اِنْفَعَلَ|ا+ن+C1+C2+C3
+
+# مُنْفَعِل - Participe actif Forme VII
+# Exemple: منكسر (cassé) depuis كسر
+مُنْفَعِل|م+ن+C1+C2+C3
+
+# ========== FORME VIII (الباب الثامن - الافتعال) ==========
+
+# اِفْتَعَلَ - Verbe réflexif (ت inséré)
+# Exemple: اكتتب (s'inscrire) depuis كتب
+اِفْتَعَلَ|ا+C1+ت+C2+C3
+
+# مُفْتَعِل - Participe actif Forme VIII
+# Exemple: مكتتب (inscrit) depuis كتب
+مُفْتَعِل|م+C1+ت+C2+C3
+
+# ========== FORME X (الباب العاشر - الاستفعال) ==========
+
+# اِسْتَفْعَلَ - Verbe de demande
+# Exemple: استكتب (demander d'écrire) depuis كتب
+اِسْتَفْعَلَ|ا+س+ت+C1+C2+C3
+
+# مُسْتَفْعِل - Participe actif Forme X
+# Exemple: مستكتب (demandant d'écrire) depuis كتب
+مُسْتَفْعِل|م+س+ت+C1+C2+C3
+
+# ========== AUTRES FORMES COURANTES ==========
+
+# أَفْعَل - Comparatif/Superlatif
+# Exemple: أكبر (plus grand) depuis كبر
+أَفْعَل|أ+C1+C2+C3
+
+# فَعْلَة - Nom abstrait
+# Exemple: كتبة (écriture) depuis كتب
+فَعْلَة|C1+C2+C3+ة
+
+# فَعَالَة - Nom abstrait avec ا
+# Exemple: كتابة (acte d'écrire) depuis كتب
+فَعَالَة|C1+C2+ا+C3+ة
+
+# فُعُولَة - Nom abstrait avec و
+# Exemple: كتوبة (état d'être écrit) depuis كتب
+فُعُولَة|C1+C2+و+C3+ة
+
+# ═══════════════════════════════════════════════════════════
+# NOTES IMPORTANTES:
+#
+# 1. Pour ajouter un nouveau schème via l'interface:
+#    - Nom: Le nom arabe du schème (ex: فاعل)
+#    - Pattern: Utilisez C1, C2, C3 (ex: C1+ا+C2+C3)
+#
+# 2. Les + sont optionnels mais recommandés pour la clarté
+#
+# 3. Exemples de patterns valides:
+#    ✓ C1+ا+C2+C3
+#    ✓ C1 ا C2 C3
+#    ✓ C1aC2C3
+#
+# 4. Le moteur déduit automatiquement les schèmes non listés
+#    en analysant la structure du mot
+# ═══════════════════════════════════════════════════════════
