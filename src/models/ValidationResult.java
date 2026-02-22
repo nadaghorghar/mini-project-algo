@@ -1,4 +1,5 @@
 package models;
+//validation d'un mot arabe
 
 public class ValidationResult {
     private boolean isValid;
