@@ -19,10 +19,10 @@ import models.Scheme;
 import models.ValidationResult;
 import structures.AVLTree;
 import structures.HashTableSchemes;
+import utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Map;
 
 public class MainGUI extends Application {
 
@@ -38,22 +38,19 @@ public class MainGUI extends Application {
     private static final String BACKGROUND_COLOR = "#f7fafc";
     private static final String CARD_COLOR = "#ffffff";
 
-    // Dans le constructeur ou l'initialisation
     public void initializeBasicSchemes() {
         schemes.insert(new Scheme("فاعل", "C1+ا+C2+C3"));
         schemes.insert(new Scheme("مفعول", "م+C1+C2+و+C3"));
         schemes.insert(new Scheme("افتعل", "ا+C1+ت+C2+C3"));
         schemes.insert(new Scheme("تفعيل", "ت+C1+C2+ي+C3"));
-        // Ajouter d'autres si besoin
     }
+
     @Override
     public void start(Stage primaryStage) {
-        // Initialisation des structures
         tree = new AVLTree();
-        schemes = new HashTableSchemes(50); // Augmenter la capacité à 50 ou plus
+        schemes = new HashTableSchemes(50);
         engine = new MorphologyEngine();
 
-        // Chargement des données depuis les fichiers
         FileLoader.loadRoots("data/racines.txt", tree);
         initializeBasicSchemes();
 
@@ -77,7 +74,20 @@ public class MainGUI extends Application {
         displayWelcome();
     }
 
-    // ==================== PARTIE EN-TETE ====================
+    // ==================== VALIDATION ARABE ====================
+
+    /**
+     * Vérifie si tous les caractères d'une chaîne sont des lettres arabes.
+     */
+    private boolean isFullyArabic(String text) {
+        if (text == null || text.isEmpty()) return false;
+        for (char c : text.toCharArray()) {
+            if (!Utils.isArabicLetter(c)) return false;
+        }
+        return true;
+    }
+
+    // ==================== EN-TETE ====================
 
     private VBox createModernHeader() {
         VBox header = new VBox();
@@ -157,7 +167,7 @@ public class MainGUI extends Application {
         });
     }
 
-    // ==================== PARTIE ZONE CENTRALE ====================
+    // ==================== ZONE CENTRALE ====================
 
     private VBox createCenterArea() {
         VBox centerArea = new VBox(20);
@@ -183,23 +193,19 @@ public class MainGUI extends Application {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);"
         );
 
-        VBox btn1 = createActionCard("Generer mot", "Creer un mot a partir d'une racine", () -> showGenerateDialog());
-        VBox btn2 = createActionCard("Valider mot", "Verifier l'appartenance d'un mot", () -> showValidateDialog());
-        VBox btn3 = createActionCard("Famille", "Afficher tous les derives", () -> showFamilyDialog());
-        VBox btn4 = createActionCard("Derives", "Mots deja valides", () -> showDerivativesDialog());
-        VBox btn5 = createActionCard("Analyser mot", "Trouver racine et scheme", () -> showDecomposeDialog());
-        VBox btn6 = createActionCard("Ajouter racine", "Nouvelle racine", () -> showAddRootDialog());
-        VBox btn7 = createActionCard("Ajouter scheme", "Nouveau scheme", () -> showAddSchemeDialog());
-        VBox btn8 = createActionCard("Modifier scheme", "Changer pattern", () -> showModifySchemeDialog());
-        VBox btn9 = createActionCard("Supprimer scheme", "Retirer un scheme", () -> showDeleteSchemeDialog());
-        VBox btn10 = createActionCard("Liste racines", "Voir toutes les racines", () -> showAllRoots());
-        VBox btn11 = createActionCard("Liste schemes", "Voir tous les schemes", () -> showAllSchemes());
+        VBox btn1  = createActionCard("Generer mot",      "Creer un mot a partir d'une racine",     () -> showGenerateDialog());
+        VBox btn2  = createActionCard("Valider mot",      "Verifier l'appartenance d'un mot",        () -> showValidateDialog());
+        VBox btn3  = createActionCard("Famille",          "Afficher tous les derives",               () -> showFamilyDialog());
+        VBox btn4  = createActionCard("Derives",          "Mots deja valides",                       () -> showDerivativesDialog());
+        VBox btn5  = createActionCard("Analyser mot",     "Trouver racine et scheme",                () -> showDecomposeDialog());
+        VBox btn6  = createActionCard("Ajouter racine",   "Nouvelle racine",                         () -> showAddRootDialog());
+        VBox btn7  = createActionCard("Ajouter scheme",   "Nouveau scheme",                          () -> showAddSchemeDialog());
+        VBox btn8  = createActionCard("Modifier scheme",  "Changer pattern",                         () -> showModifySchemeDialog());
+        VBox btn9  = createActionCard("Supprimer scheme", "Retirer un scheme",                       () -> showDeleteSchemeDialog());
+        VBox btn10 = createActionCard("Liste racines",    "Voir toutes les racines",                 () -> showAllRoots());
+        VBox btn11 = createActionCard("Liste schemes",    "Voir tous les schemes",                   () -> showAllSchemes());
 
-        buttonsPane.getChildren().addAll(
-                btn1, btn2, btn3, btn4, btn5, btn6,
-                btn7, btn8, btn9, btn10, btn11
-        );
-
+        buttonsPane.getChildren().addAll(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, btn11);
         return buttonsPane;
     }
 
@@ -229,26 +235,20 @@ public class MainGUI extends Application {
 
         card.getChildren().addAll(titleLabel, descLabel);
 
-        card.setOnMouseEntered(e -> {
-            card.setStyle(
-                    "-fx-background-color: " + SECONDARY_COLOR + ";" +
-                            "-fx-background-radius: 10;" +
-                            "-fx-cursor: hand;" +
-                            "-fx-effect: dropshadow(gaussian, rgba(118, 75, 162, 0.5), 10, 0, 0, 4);" +
-                            "-fx-scale-x: 1.05;" +
-                            "-fx-scale-y: 1.05;"
-            );
-        });
-
-        card.setOnMouseExited(e -> {
-            card.setStyle(
-                    "-fx-background-color: " + PRIMARY_COLOR + ";" +
-                            "-fx-background-radius: 10;" +
-                            "-fx-cursor: hand;" +
-                            "-fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 5, 0, 0, 2);"
-            );
-        });
-
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-background-color: " + SECONDARY_COLOR + ";" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(118, 75, 162, 0.5), 10, 0, 0, 4);" +
+                        "-fx-scale-x: 1.05;" +
+                        "-fx-scale-y: 1.05;"
+        ));
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-background-color: " + PRIMARY_COLOR + ";" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 5, 0, 0, 2);"
+        ));
         card.setOnMouseClicked(e -> action.run());
 
         return card;
@@ -278,7 +278,6 @@ public class MainGUI extends Application {
 
         VBox.setVgrow(outputArea, Priority.ALWAYS);
         resultsBox.getChildren().addAll(resultsTitle, outputArea);
-
         return resultsBox;
     }
 
@@ -300,71 +299,53 @@ public class MainGUI extends Application {
         );
     }
 
-    // ==================== METHODES D'AFFICHAGE SIMPLIFIE ====================
+    // ==================== AFFICHAGE ANALYSE ====================
 
     private void showSimpleAnalysis(String word, ValidationResult result) {
         StringBuilder sb = new StringBuilder();
-
         sb.append("--------------------------------------------------\n");
         sb.append("Resultat d'analyse de mot\n");
         sb.append("--------------------------------------------------\n\n");
-
         sb.append("Mot: ").append(word).append("\n\n");
 
         if (result.isValid()) {
             Root root = result.getRoot();
             Scheme scheme = result.getScheme();
-
-            sb.append("Racine: ").append(root.getLetters()).append("\n");
-            sb.append("Type: ").append(root.getType()).append("\n\n");
-
             String schemeName = scheme.getName();
-            String schemePattern = scheme.getPattern();
 
-            // Nettoyer le nom du scheme pour enlever les informations techniques
             String cleanSchemeName = schemeName;
             if (schemeName.contains("⚠️") || schemeName.contains("[")) {
                 cleanSchemeName = "non disponible";
             }
 
-            boolean isAvailable = schemes.search(schemeName.replace(" (deduit)", "").replace(" ⚠️", "").replaceAll("\\[.*\\]", "").trim()) != null;
+            boolean isAvailable = schemes.search(
+                    schemeName.replace(" (deduit)", "").replace(" ⚠️", "")
+                            .replaceAll("\\[.*\\]", "").trim()
+            ) != null;
 
-            if (isAvailable) {
-                sb.append("Schema: ").append(cleanSchemeName).append("\n");
-                sb.append("Pattern: ").append(convertPatternToArabic(schemePattern)).append("\n");
-            } else {
-                sb.append("Schema: ").append(cleanSchemeName).append("\n");
-                sb.append("Pattern deduit: ").append(convertPatternToArabic(schemePattern)).append("\n");
-            }
+            sb.append("Racine: ").append(root.getLetters()).append("\n");
+            sb.append("Type: ").append(root.getType()).append("\n\n");
+            sb.append("Schema: ").append(cleanSchemeName).append("\n");
+            sb.append(isAvailable ? "Pattern: " : "Pattern deduit: ")
+                    .append(convertPatternToArabic(scheme.getPattern())).append("\n");
         } else {
             sb.append("Aucune analyse trouvee pour ce mot\n");
         }
 
         sb.append("\n--------------------------------------------------\n");
-
         displayResult(sb.toString());
     }
 
     private String convertPatternToArabic(String pattern) {
         if (pattern == null) return "";
-
-        // Remplacer d'abord les patterns techniques
-        String result = pattern
-                .replace("C1", "ح1")
-                .replace("C2", "ح2")
-                .replace("C3", "ح3")
-                .replace("ف1", "ح1")
-                .replace("ف2", "ح2")
-                .replace("ف3", "ح3")
-                .replace("+", " + ");
-
-        // Nettoyer les eventuels crochets residus
-        result = result.replaceAll("\\[.*?\\]", "").trim();
-
-        return result;
+        return pattern
+                .replace("C1", "ح1").replace("C2", "ح2").replace("C3", "ح3")
+                .replace("ف1", "ح1").replace("ف2", "ح2").replace("ف3", "ح3")
+                .replace("+", " + ")
+                .replaceAll("\\[.*?\\]", "").trim();
     }
 
-    // ==================== DIALOGUE GENERATION DE MOT ====================
+    // ==================== DIALOGUE GENERATION ====================
 
     private void showGenerateDialog() {
         Dialog<ButtonType> dialog = createStyledDialog("Generer un mot");
@@ -372,14 +353,12 @@ public class MainGUI extends Application {
 
         GridPane grid = createDialogGrid();
 
-        TextField rootField = createStyledTextField("Racine (ex: كتب)");
+        TextField rootField = createStyledTextField("Racine arabe (ex: كتب)");
         ComboBox<String> schemeCombo = new ComboBox<>();
         schemeCombo.setPromptText("Choisir un scheme...");
         schemeCombo.setPrefWidth(300);
 
-        // Charger tous les schemes de la table de hachage
-        List<Scheme> allSchemes = schemes.getAllSchemes();
-        for (Scheme s : allSchemes) {
+        for (Scheme s : schemes.getAllSchemes()) {
             schemeCombo.getItems().add(s.getName());
         }
 
@@ -394,14 +373,10 @@ public class MainGUI extends Application {
         grid.add(schemeCombo, 1, 2);
 
         rootField.textProperty().addListener((obs, oldVal, newVal) -> {
-            String rootStr = newVal.trim();
-            if (rootStr.length() == 3) {
-                Node node = tree.search(rootStr);
-                if (node != null) {
-                    typeLabel.setText(node.getRoot().getType());
-                } else {
-                    typeLabel.setText("Racine non trouvee");
-                }
+            String rs = newVal.trim();
+            if (rs.length() == 3) {
+                Node n = tree.search(rs);
+                typeLabel.setText(n != null ? n.getRoot().getType() : "Racine non trouvee");
             } else {
                 typeLabel.setText("");
             }
@@ -415,50 +390,39 @@ public class MainGUI extends Application {
                 String rootStr = rootField.getText().trim();
                 String schemeName = schemeCombo.getValue();
 
-                if (schemeName == null) {
-                    showError("Veuillez selectionner un scheme");
-                    return;
-                }
+                if (schemeName == null) { showError("Veuillez selectionner un scheme"); return; }
 
-                Node node = tree.search(rootStr);
-                if (node == null) {
-                    showError("Racine non trouvee: " + rootStr);
-                    return;
-                }
+                Node n = tree.search(rootStr);
+                if (n == null) { showError("Racine non trouvee: " + rootStr); return; }
 
                 Scheme selectedScheme = schemes.search(schemeName);
-                if (selectedScheme == null) {
-                    showError("Scheme non trouve: " + schemeName);
-                    return;
-                }
+                if (selectedScheme == null) { showError("Scheme non trouve: " + schemeName); return; }
 
-                String result = engine.generate(node.getRoot(), selectedScheme);
-                node.getRoot().addDerivative(result);
+                String result = engine.generate(n.getRoot(), selectedScheme);
+                n.getRoot().addDerivative(result);
 
                 StringBuilder sb = new StringBuilder();
                 sb.append("--------------------------------------------------\n");
                 sb.append("Resultat de generation\n");
                 sb.append("--------------------------------------------------\n\n");
                 sb.append("Racine: ").append(rootStr).append("\n");
-                sb.append("Type: ").append(node.getRoot().getType()).append("\n");
+                sb.append("Type: ").append(n.getRoot().getType()).append("\n");
                 sb.append("Scheme: ").append(schemeName).append("\n");
                 sb.append("Pattern: ").append(convertPatternToArabic(selectedScheme.getPattern())).append("\n\n");
                 sb.append("Mot genere: ").append(result).append("\n");
                 sb.append("\n--------------------------------------------------\n");
-
                 displayResult(sb.toString());
             }
         });
     }
 
-    // ==================== DIALOGUE VALIDATION DE MOT ====================
+    // ==================== DIALOGUE VALIDATION ====================
 
     private void showValidateDialog() {
         Dialog<ButtonType> dialog = createStyledDialog("Validation de mot");
         dialog.setHeaderText("Verifier si un mot appartient a une racine");
 
         GridPane grid = createDialogGrid();
-
         TextField wordField = createStyledTextField("Mot (ex: كاتب)");
         TextField rootField = createStyledTextField("Racine (ex: كتب)");
 
@@ -475,16 +439,12 @@ public class MainGUI extends Application {
                 String word = wordField.getText().trim();
                 String rootStr = rootField.getText().trim();
 
-                Node node = tree.search(rootStr);
-                if (node == null) {
-                    showError("Racine non trouvee");
-                    return;
-                }
+                Node n = tree.search(rootStr);
+                if (n == null) { showError("Racine non trouvee"); return; }
 
-                ValidationResult result = engine.validate(word, node.getRoot(), schemes);
-
+                ValidationResult result = engine.validate(word, n.getRoot(), schemes);
                 if (result.isValid()) {
-                    node.getRoot().addDerivative(word);
+                    n.getRoot().addDerivative(word);
                     showSimpleAnalysis(word, result);
                 } else {
                     StringBuilder sb = new StringBuilder();
@@ -501,24 +461,16 @@ public class MainGUI extends Application {
         });
     }
 
-    // ==================== DIALOGUE FAMILLE MORPHOLOGIQUE ====================
+    // ==================== DIALOGUE FAMILLE ====================
 
     private void showFamilyDialog() {
-        TextInputDialog dialog = createStyledInputDialog(
-                "Famille morphologique",
-                "Entrez la racine",
-                "Racine:"
-        );
-
+        TextInputDialog dialog = createStyledInputDialog("Famille morphologique", "Entrez la racine", "Racine:");
         dialog.showAndWait().ifPresent(rootStr -> {
-            Node node = tree.search(rootStr);
-            if (node == null) {
-                showError("Racine non trouvee");
-                return;
-            }
+            Node n = tree.search(rootStr);
+            if (n == null) { showError("Racine non trouvee"); return; }
 
-            Root root = node.getRoot();
-            List<Scheme> allSchemes = schemes.getAllSchemes(); // TOUS les schemes
+            Root root = n.getRoot();
+            List<Scheme> allSchemes = schemes.getAllSchemes();
 
             StringBuilder sb = new StringBuilder();
             sb.append("--------------------------------------------------\n");
@@ -536,28 +488,19 @@ public class MainGUI extends Application {
 
             sb.append("\nTotal: ").append(count).append(" mots generes\n");
             sb.append("--------------------------------------------------\n");
-
             displayResult(sb.toString());
         });
     }
 
-    // ==================== DIALOGUE DERIVES VALIDES ====================
+    // ==================== DIALOGUE DERIVES ====================
 
     private void showDerivativesDialog() {
-        TextInputDialog dialog = createStyledInputDialog(
-                "Derives valides",
-                "Afficher les derives valides pour une racine",
-                "Racine:"
-        );
-
+        TextInputDialog dialog = createStyledInputDialog("Derives valides", "Afficher les derives valides pour une racine", "Racine:");
         dialog.showAndWait().ifPresent(rootStr -> {
-            Node node = tree.search(rootStr);
-            if (node == null) {
-                showError("Racine non trouvee");
-                return;
-            }
+            Node n = tree.search(rootStr);
+            if (n == null) { showError("Racine non trouvee"); return; }
 
-            List<String> derivatives = node.getRoot().getValidatedDerivatives();
+            List<String> derivatives = n.getRoot().getValidatedDerivatives();
             StringBuilder sb = new StringBuilder();
             sb.append("--------------------------------------------------\n");
             sb.append("Derives valides pour la racine: ").append(rootStr).append("\n");
@@ -577,46 +520,43 @@ public class MainGUI extends Application {
         });
     }
 
-    // ==================== DIALOGUE ANALYSE DE MOT ====================
+    // ==================== DIALOGUE ANALYSE ====================
 
     private void showDecomposeDialog() {
-        TextInputDialog dialog = createStyledInputDialog(
-                "Analyser un mot",
-                "Entrez le mot a analyser",
-                "Mot:"
-        );
-
+        TextInputDialog dialog = createStyledInputDialog("Analyser un mot", "Entrez le mot a analyser", "Mot:");
         dialog.showAndWait().ifPresent(word -> {
-            if (word.trim().isEmpty()) {
-                showError("Veuillez entrer un mot");
-                return;
-            }
+            if (word.trim().isEmpty()) { showError("Veuillez entrer un mot"); return; }
 
             ValidationResult result = engine.decomposeWord(word, tree, schemes);
-
             showSimpleAnalysis(word, result);
 
             if (result.isValid()) {
-                Node node = tree.search(result.getRoot().getLetters());
-                if (node != null) {
-                    node.getRoot().addDerivative(word);
-                }
+                Node n = tree.search(result.getRoot().getLetters());
+                if (n != null) n.getRoot().addDerivative(word);
             }
         });
     }
 
-    // ==================== DIALOGUE AJOUT DE RACINE ====================
+    // ==================== DIALOGUE AJOUT RACINE ====================
 
     private void showAddRootDialog() {
         TextInputDialog dialog = createStyledInputDialog(
                 "Ajouter une racine",
-                "Entrez la nouvelle racine (3 lettres)",
+                "Entrez la nouvelle racine (3 lettres arabes uniquement)",
                 "Racine:"
         );
 
         dialog.showAndWait().ifPresent(rootStr -> {
+            rootStr = rootStr.trim();
+
             if (rootStr.length() != 3) {
                 showError("La racine doit contenir exactement 3 lettres");
+                return;
+            }
+
+            // ✅ Validation: uniquement des lettres arabes
+            if (!isFullyArabic(rootStr)) {
+                showError("La racine doit contenir uniquement des lettres arabes !");
                 return;
             }
 
@@ -638,16 +578,15 @@ public class MainGUI extends Application {
             sb.append("Type: ").append(newRoot.getType()).append("\n");
             sb.append("\nTotal racines: ").append(tree.size()).append("\n");
             sb.append("--------------------------------------------------\n");
-
             displayResult(sb.toString());
         });
     }
 
-    // ==================== DIALOGUE AJOUT DE SCHEME ====================
+    // ==================== DIALOGUE AJOUT SCHEME ====================
 
     private void showAddSchemeDialog() {
         Dialog<ButtonType> dialog = createStyledDialog("Ajouter un scheme");
-        dialog.setHeaderText("Entrez le nom du scheme (pattern genere automatiquement)");
+        dialog.setHeaderText("Entrez le nom du scheme (lettres arabes uniquement)");
 
         VBox content = new VBox(10);
 
@@ -663,28 +602,35 @@ public class MainGUI extends Application {
         helpText.setWrapText(true);
 
         GridPane grid = createDialogGrid();
-
-        TextField nameField = createStyledTextField("Nom du scheme");
+        TextField nameField = createStyledTextField("Nom du scheme (arabe uniquement)");
 
         Label patternPreview = new Label("");
         patternPreview.setStyle("-fx-text-fill: " + PRIMARY_COLOR + "; -fx-font-weight: bold;");
 
-        grid.add(new Label("Nom:"), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label("Pattern genere:"), 0, 1);
-        grid.add(patternPreview, 1, 1);
+        // Warning label shown when non-Arabic input is detected
+        Label warningLabel = new Label("");
+        warningLabel.setStyle("-fx-text-fill: red; -fx-font-size: 11;");
 
         nameField.textProperty().addListener((obs, oldVal, newVal) -> {
-            String generatedPattern = generatePatternFromSchemeName(newVal.trim());
-            if (generatedPattern != null && !generatedPattern.isEmpty()) {
-                patternPreview.setText(convertPatternToArabic(generatedPattern));
+            if (!newVal.isEmpty() && !isFullyArabic(newVal.trim())) {
+                warningLabel.setText("⚠ Uniquement des lettres arabes sont acceptées !");
+                patternPreview.setText("");
             } else {
-                patternPreview.setText("(pattern sera genere automatiquement)");
+                warningLabel.setText("");
+                String generatedPattern = generatePatternFromSchemeName(newVal.trim());
+                patternPreview.setText((generatedPattern != null && !generatedPattern.isEmpty())
+                        ? convertPatternToArabic(generatedPattern)
+                        : "(pattern sera genere automatiquement)");
             }
         });
 
-        content.getChildren().addAll(helpText, grid);
+        grid.add(new Label("Nom:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(warningLabel, 0, 1, 2, 1);
+        grid.add(new Label("Pattern genere:"), 0, 2);
+        grid.add(patternPreview, 1, 2);
 
+        content.getChildren().addAll(helpText, grid);
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -697,13 +643,18 @@ public class MainGUI extends Application {
                     return;
                 }
 
+                // ✅ Validation: uniquement des lettres arabes
+                if (!isFullyArabic(name)) {
+                    showError("Le nom du schème doit contenir uniquement des lettres arabes !");
+                    return;
+                }
+
                 if (schemes.search(name) != null) {
                     showError("Ce scheme existe deja");
                     return;
                 }
 
                 String generatedPattern = generatePatternFromSchemeName(name);
-
                 if (generatedPattern == null || generatedPattern.isEmpty()) {
                     showError("Impossible de generer un pattern pour ce scheme");
                     return;
@@ -721,96 +672,57 @@ public class MainGUI extends Application {
                 sb.append("Pattern genere: ").append(convertPatternToArabic(generatedPattern)).append("\n");
                 sb.append("\nTotal schemes: ").append(schemes.size()).append("\n");
                 sb.append("--------------------------------------------------\n");
-
                 displayResult(sb.toString());
             }
         });
     }
 
     private String generatePatternFromSchemeName(String schemeName) {
-        if (schemeName == null || schemeName.isEmpty()) {
-            return null;
-        }
+        if (schemeName == null || schemeName.isEmpty()) return null;
 
-        String name = schemeName.trim();
+        String normalized = schemeName.trim()
+                .replace("َ", "").replace("ِ", "").replace("ُ", "")
+                .replace("ْ", "").replace("ّ", "");
 
-        // Enlever les diacritiques
-        String normalized = name
-                .replace("َ", "")
-                .replace("ِ", "")
-                .replace("ُ", "")
-                .replace("ْ", "")
-                .replace("ّ", "");
-
-        // Remplacer les lettres racines
         String pattern = normalized
-                .replace('ف', '1')
-                .replace('ع', '2')
-                .replace('ل', '3');
+                .replace('ف', '1').replace('ع', '2').replace('ل', '3');
 
-        // Convertir en notation C1, C2, C3
-        pattern = pattern
-                .replace("1", "C1")
-                .replace("2", "C2")
-                .replace("3", "C3");
+        pattern = pattern.replace("1", "C1").replace("2", "C2").replace("3", "C3");
 
-        // Ajouter les separateurs
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < pattern.length(); i++) {
             result.append(pattern.charAt(i));
-            if (i < pattern.length() - 1) {
-                // Verifier si le prochain caractere est un C (donc debut d'un C1/C2/C3)
-                if (pattern.charAt(i + 1) == 'C') {
-                    result.append("+");
-                }
+            if (i < pattern.length() - 1 && pattern.charAt(i + 1) == 'C') {
+                result.append("+");
             }
         }
-
         return result.toString();
     }
 
-    // ==================== DIALOGUE MODIFICATION DE SCHEME ====================
+    // ==================== DIALOGUE MODIFICATION SCHEME ====================
 
     private void showModifySchemeDialog() {
         TextInputDialog searchDialog = createStyledInputDialog(
-                "Modifier un scheme",
-                "Entrez le nom du scheme a modifier",
-                "Nom:"
-        );
+                "Modifier un scheme", "Entrez le nom du scheme a modifier", "Nom:");
 
         Optional<String> result = searchDialog.showAndWait();
-
         result.ifPresent(schemeName -> {
             Scheme scheme = schemes.search(schemeName);
-
-            if (scheme == null) {
-                showError("Scheme non trouve: " + schemeName);
-                return;
-            }
+            if (scheme == null) { showError("Scheme non trouve: " + schemeName); return; }
 
             Dialog<ButtonType> modifyDialog = createStyledDialog("Modifier un scheme");
             modifyDialog.setHeaderText("Modification du scheme - " + schemeName);
 
             GridPane grid = createDialogGrid();
 
-            // Afficher le pattern actuel
-            Label currentLabel = new Label("Pattern actuel:");
             Label currentValue = new Label(convertPatternToArabic(scheme.getPattern()));
             currentValue.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
             currentValue.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
 
-            // Champ pour saisir le nouveau pattern
-            Label newPatternLabel = new Label("Nouveau pattern:");
             TextField newPatternField = createStyledTextField("Entrez le nouveau pattern");
-
-            // Suggestion automatique (optionnelle)
-            String suggestedPattern = generatePatternFromSchemeName(schemeName);
-
-            // Preview du pattern en arabe
             Label previewLabel = new Label("");
             previewLabel.setStyle("-fx-text-fill: " + SECONDARY_COLOR + "; -fx-font-style: italic;");
 
-            // Ajouter un ecouteur pour la preview
             newPatternField.textProperty().addListener((obs, oldVal, newVal) -> {
                 if (!newVal.trim().isEmpty()) {
                     previewLabel.setText("Apercu: " + convertPatternToArabic(newVal));
@@ -819,16 +731,15 @@ public class MainGUI extends Application {
                 }
             });
 
-            // Organiser dans la grille
             grid.add(new Label("Nom:"), 0, 0);
             grid.add(new Label(schemeName), 1, 0);
-            grid.add(currentLabel, 0, 1);
+            grid.add(new Label("Pattern actuel:"), 0, 1);
             grid.add(currentValue, 1, 1);
-            grid.add(newPatternLabel, 0, 2);
+            grid.add(new Label("Nouveau pattern:"), 0, 2);
             grid.add(newPatternField, 1, 2);
             grid.add(previewLabel, 0, 3, 2, 1);
 
-            // Suggestion si disponible
+            String suggestedPattern = generatePatternFromSchemeName(schemeName);
             if (suggestedPattern != null && !suggestedPattern.isEmpty()) {
                 Label suggestionLabel = new Label("Suggestion: " + suggestedPattern);
                 suggestionLabel.setStyle("-fx-text-fill: " + SECONDARY_COLOR + "; -fx-font-size: 11;");
@@ -842,7 +753,6 @@ public class MainGUI extends Application {
                                 "-fx-background-radius: 5;" +
                                 "-fx-cursor: hand;"
                 );
-
                 useSuggestionBtn.setOnAction(e -> {
                     newPatternField.setText(suggestedPattern);
                     previewLabel.setText("Apercu: " + convertPatternToArabic(suggestedPattern));
@@ -858,11 +768,7 @@ public class MainGUI extends Application {
             modifyDialog.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
                     String newPattern = newPatternField.getText().trim();
-
-                    if (newPattern.isEmpty()) {
-                        showError("Veuillez entrer un nouveau pattern");
-                        return;
-                    }
+                    if (newPattern.isEmpty()) { showError("Veuillez entrer un nouveau pattern"); return; }
 
                     String oldPattern = scheme.getPattern();
                     boolean success = schemes.modify(schemeName, newPattern);
@@ -886,22 +792,15 @@ public class MainGUI extends Application {
         });
     }
 
-    // ==================== DIALOGUE SUPPRESSION DE SCHEME ====================
+    // ==================== DIALOGUE SUPPRESSION SCHEME ====================
 
     private void showDeleteSchemeDialog() {
         TextInputDialog dialog = createStyledInputDialog(
-                "Supprimer un scheme",
-                "Entrez le nom du scheme a supprimer",
-                "Nom:"
-        );
+                "Supprimer un scheme", "Entrez le nom du scheme a supprimer", "Nom:");
 
         dialog.showAndWait().ifPresent(schemeName -> {
             Scheme scheme = schemes.search(schemeName);
-
-            if (scheme == null) {
-                showError("Scheme non trouve: " + schemeName);
-                return;
-            }
+            if (scheme == null) { showError("Scheme non trouve: " + schemeName); return; }
 
             Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmAlert.setTitle("Confirmation");
@@ -912,10 +811,8 @@ public class MainGUI extends Application {
             );
 
             Optional<ButtonType> confirmResult = confirmAlert.showAndWait();
-
             if (confirmResult.isPresent() && confirmResult.get() == ButtonType.OK) {
                 boolean success = schemes.delete(schemeName);
-
                 if (success) {
                     updateStats();
                     StringBuilder sb = new StringBuilder();
@@ -943,7 +840,6 @@ public class MainGUI extends Application {
         sb.append("--------------------------------------------------\n\n");
 
         List<Root> allRoots = tree.getAllRoots();
-
         if (allRoots.isEmpty()) {
             sb.append("Aucune racine\n");
         } else {
@@ -966,14 +862,13 @@ public class MainGUI extends Application {
         sb.append("--------------------------------------------------\n\n");
 
         List<Scheme> allSchemes = schemes.getAllSchemes();
-
         if (allSchemes.isEmpty()) {
             sb.append("Aucun scheme\n");
         } else {
             for (int i = 0; i < allSchemes.size(); i++) {
                 Scheme scheme = allSchemes.get(i);
-                String arabicPattern = convertPatternToArabic(scheme.getPattern());
-                sb.append(String.format("%d. %s -> %s\n", i + 1, scheme.getName(), arabicPattern));
+                sb.append(String.format("%d. %s -> %s\n",
+                        i + 1, scheme.getName(), convertPatternToArabic(scheme.getPattern())));
             }
             sb.append("\nTotal: ").append(schemes.size()).append(" schemes\n");
         }
@@ -982,7 +877,7 @@ public class MainGUI extends Application {
         displayResult(sb.toString());
     }
 
-    // ==================== METHODES UTILITAIRES ====================
+    // ==================== UTILITAIRES ====================
 
     private Dialog<ButtonType> createStyledDialog(String title) {
         Dialog<ButtonType> dialog = new Dialog<>();
